@@ -28,7 +28,9 @@
 
 ### 电量换算
 
-应用读取鼠标报告的实际电池电压，并按 MC203 Windows 原厂驱动所采用的电压/电量换算点计算百分比。这个曲线**不是线性的**：例如约 `3843 mV` 会显示约 `45%`，而约 `4000 mV` 对应约 `75%`，`4110 mV` 及以上才是 `100%`。这是保留原厂换算方式的结果，并非本项目额外平滑或修改后的曲线。
+应用读取鼠标报告的实际电池电压，并按 MC203 Windows 原厂驱动所采用的电压/电量换算点计算百分比。这个曲线**不是线性的**：例如约 `3843 mV` 会显示约 `45%`，而约 `4000 mV` 对应约 `75%`，`4110 mV` 为 `100%`。
+
+为便于观察充电电压，本应用在 `4110 mV` 以上启用一个有趣的**电压扩展显示**：每高约 `18 mV` 增加 `1%`，最高显示 `120%`；例如 `4290 mV` 显示约 `110%`。这不是“电池容量超过 100%”，而是高于原厂满电阈值的电压余量。
 
 ### 安装与构建
 
@@ -79,7 +81,9 @@ It does **not** support Bluetooth, keyboards, or other TAIDU mice. A matching or
 
 ### Battery conversion
 
-The app reads the battery voltage reported by the mouse and converts it to a percentage using the voltage-to-percentage points used by the MC203 Windows driver. The curve is intentionally **non-linear**: about `3843 mV` maps to about `45%`, about `4000 mV` maps to about `75%`, and `4110 mV` or higher maps to `100%`. The app preserves that vendor conversion behaviour; it does not apply an extra smoothing curve.
+The app reads the battery voltage reported by the mouse and converts it to a percentage using the voltage-to-percentage points used by the MC203 Windows driver. The curve is intentionally **non-linear**: about `3843 mV` maps to about `45%`, about `4000 mV` maps to about `75%`, and `4110 mV` is `100%`.
+
+To make charging voltage easier to observe, the app uses a fun **voltage extension display** above `4110 mV`: roughly every extra `18 mV` adds `1%`, capped at `120%`; for example, `4290 mV` displays about `110%`. This does not mean the battery has more than 100% capacity—it is voltage headroom above the vendor’s full-charge threshold.
 
 ### Build
 

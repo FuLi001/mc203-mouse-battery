@@ -35,7 +35,10 @@ static void MC203Packet(uint8_t command, BOOL enabled, uint8_t packet[17]) {
 static NSInteger PercentageFromMillivolts(NSInteger mv, BOOL charging) {
     static const NSInteger points[] = {3050,3420,3480,3540,3600,3660,3720,3760,3800,3840,3880,3920,3940,3960,3980,4000,4020,4040,4060,4080,4110};
     const NSInteger count = sizeof(points) / sizeof(points[0]);
-    if (mv >= points[count - 1]) return charging ? 99 : 100;
+    // Fun voltage extension: 4110 mV remains 100%; above that, every roughly
+    // 18 mV contributes one displayed point, capped at 120%. This represents
+    // voltage headroom only, not battery capacity beyond 100%.
+    if (mv >= points[count - 1]) return MIN(120, 100 + (mv - points[count - 1]) / 18);
     if (mv < points[0]) return 0;
     for (NSInteger i = 1; i < count; i++) if (mv < points[i]) {
         NSInteger result = (i - 1) * 5 + (mv - points[i - 1]) * 5 / (points[i] - points[i - 1]);
@@ -191,7 +194,7 @@ static void InputReport(void *context, IOReturn result, void *sender, IOHIDRepor
 
 - (void)updateLogin { if (@available(macOS 13.0, *)) self.loginItem.state = SMAppService.mainAppService.status == SMAppServiceStatusEnabled ? NSControlStateValueOn : NSControlStateValueOff; }
 - (void)toggleLogin:(id)sender { if (@available(macOS 13.0, *)) { NSError *e = nil; SMAppService *s = SMAppService.mainAppService; BOOL ok = s.status == SMAppServiceStatusEnabled ? [s unregisterAndReturnError:&e] : [s registerAndReturnError:&e]; [self log:ok ? @"开机自动启动设置已更新。" : [NSString stringWithFormat:@"开机自动启动设置失败：%@", e.localizedDescription]]; [self updateLogin]; } }
-- (void)copyDiagnostics:(id)sender { NSString *header = @"鼠标电量 1.0.5\\n说明：只记录 TAIDU MC203 的原厂电量状态报告，不记录鼠标移动、按键或其他输入。\\n\\n"; NSPasteboard *p = NSPasteboard.generalPasteboard; [p clearContents]; [p setString:[header stringByAppendingString:[self.diagnostics componentsJoinedByString:@"\\n"]] forType:NSPasteboardTypeString]; }
+- (void)copyDiagnostics:(id)sender { NSString *header = @"鼠标电量 1.0.7\\n说明：只记录 TAIDU MC203 的原厂电量状态报告，不记录鼠标移动、按键或其他输入。\\n\\n"; NSPasteboard *p = NSPasteboard.generalPasteboard; [p clearContents]; [p setString:[header stringByAppendingString:[self.diagnostics componentsJoinedByString:@"\\n"]] forType:NSPasteboardTypeString]; }
 - (void)applicationWillTerminate:(NSNotification *)note { [self.replyTimer invalidate]; [self.sessionTimer invalidate]; [self.refreshTimer invalidate]; [self.permissionTimer invalidate]; if (_device) { [self sendSession:NO]; IOHIDDeviceClose(_device, kIOHIDOptionsTypeNone); CFRelease(_device); } if (self.manager) { IOHIDManagerClose(self.manager, kIOHIDOptionsTypeNone); IOHIDManagerUnscheduleFromRunLoop(self.manager, CFRunLoopGetMain(), kCFRunLoopCommonModes); CFRelease(self.manager); } }
 @end
 
