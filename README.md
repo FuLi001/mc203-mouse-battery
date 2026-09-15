@@ -22,6 +22,7 @@
 - 在菜单中显示最近一次有效读数的电池电压（mV）。
 - 充电中显示绿色闪电；设备报告满电时显示“已充满”。
 - 支持“立即刷新”和“开机自动启动”。
+- 每 10 秒自动刷新一次；插入或拔出充电线后通常会在 10 秒内更新。
 - 只匹配 MC203 的指定 HID 状态接口；不使用蓝牙。
 - 不记录鼠标移动、按键、滚轮或个人数据。诊断信息只保存在内存中，直到退出应用。
 
@@ -62,6 +63,7 @@ It does **not** support Bluetooth, keyboards, or other TAIDU mice. A matching or
 - Shows the voltage (mV) from the latest valid battery report in the menu.
 - Shows a green lightning bolt while charging and “Fully charged” when reported by the device.
 - Includes manual refresh and Launch at Login.
+- Refreshes automatically every 10 seconds; plugging or unplugging the charging cable normally appears within 10 seconds.
 - Matches only the specified MC203 HID status interfaces; no Bluetooth is used.
 - Does not record pointer movement, buttons, scrolling, or personal data. Diagnostics stay in memory only until the app quits.
 
