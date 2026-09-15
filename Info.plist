@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleDevelopmentRegion</key><string>zh_CN</string>
+<key>CFBundleDisplayName</key><string>鼠标电量</string>
+<key>CFBundleExecutable</key><string>MouseBattery</string>
+<key>CFBundleIdentifier</key><string>com.redneko.mc203battery</string>
+<key>CFBundleIconFile</key><string>AppIcon.icns</string>
+<key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+<key>CFBundleName</key><string>鼠标电量</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>1.0.3</string>
+<key>CFBundleVersion</key><string>4</string>
+<key>LSMinimumSystemVersion</key><string>13.0</string>
+<key>LSUIElement</key><true/>
+<key>NSHumanReadableCopyright</key><string>Personal utility for TAIDU MC203</string>
+<key>NSInputMonitoringUsageDescription</key><string>仅读取 TAIDU MC203 鼠标指定 HID 状态通道的电量状态，不记录鼠标操作。</string>
+</dict></plist>
