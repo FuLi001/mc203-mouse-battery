@@ -1,4 +1,4 @@
-TAIDU MC203 鼠标电量 1.0.7（Apple Silicon）
+TAIDU MC203 鼠标电量 1.0.8（Apple Silicon）
 
 仅支持：钛度／TAIDU MC203 人体工学鼠标
 

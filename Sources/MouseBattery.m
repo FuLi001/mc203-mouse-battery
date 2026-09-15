@@ -144,7 +144,17 @@ static void InputReport(void *context, IOReturn result, void *sender, IOHIDRepor
 - (void)refresh:(id)sender {
     if (!self.manager) return;
     IOHIDDeviceRef found = NULL; CFSetRef set = IOHIDManagerCopyDevices(self.manager);
-    for (id obj in (__bridge NSSet *)set) { IOHIDDeviceRef candidate = (__bridge IOHIDDeviceRef)obj; if (HIDInteger(candidate, CFSTR(kIOHIDVendorIDKey)) == kMC203Vendor) { found = candidate; break; } }
+    for (id obj in (__bridge NSSet *)set) {
+        IOHIDDeviceRef candidate = (__bridge IOHIDDeviceRef)obj;
+        NSInteger vendor = HIDInteger(candidate, CFSTR(kIOHIDVendorIDKey));
+        NSInteger product = HIDInteger(candidate, CFSTR(kIOHIDProductIDKey));
+        NSInteger maxInput = HIDInteger(candidate, CFSTR(kIOHIDMaxInputReportSizeKey));
+        NSInteger maxOutput = HIDInteger(candidate, CFSTR(kIOHIDMaxOutputReportSizeKey));
+        // The receiver exposes ordinary mouse/keyboard collections as well as
+        // its vendor status collection. Only the latter can exchange the
+        // 17-byte report-8 battery packets.
+        if (vendor == kMC203Vendor && (product == kMC203Receiver || product == kMC203Wired) && maxInput >= 17 && maxOutput >= 17) { found = candidate; break; }
+    }
     if (set) CFRelease(set); self.connected = found != NULL; [self configureDevice:found]; if (_sessionReady) [self requestBattery]; [self updateDisplay];
 }
 
@@ -194,7 +204,7 @@ static void InputReport(void *context, IOReturn result, void *sender, IOHIDRepor
 
 - (void)updateLogin { if (@available(macOS 13.0, *)) self.loginItem.state = SMAppService.mainAppService.status == SMAppServiceStatusEnabled ? NSControlStateValueOn : NSControlStateValueOff; }
 - (void)toggleLogin:(id)sender { if (@available(macOS 13.0, *)) { NSError *e = nil; SMAppService *s = SMAppService.mainAppService; BOOL ok = s.status == SMAppServiceStatusEnabled ? [s unregisterAndReturnError:&e] : [s registerAndReturnError:&e]; [self log:ok ? @"开机自动启动设置已更新。" : [NSString stringWithFormat:@"开机自动启动设置失败：%@", e.localizedDescription]]; [self updateLogin]; } }
-- (void)copyDiagnostics:(id)sender { NSString *header = @"鼠标电量 1.0.7\\n说明：只记录 TAIDU MC203 的原厂电量状态报告，不记录鼠标移动、按键或其他输入。\\n\\n"; NSPasteboard *p = NSPasteboard.generalPasteboard; [p clearContents]; [p setString:[header stringByAppendingString:[self.diagnostics componentsJoinedByString:@"\\n"]] forType:NSPasteboardTypeString]; }
+- (void)copyDiagnostics:(id)sender { NSString *header = @"鼠标电量 1.0.8\\n说明：只记录 TAIDU MC203 的原厂电量状态报告，不记录鼠标移动、按键或其他输入。\\n\\n"; NSPasteboard *p = NSPasteboard.generalPasteboard; [p clearContents]; [p setString:[header stringByAppendingString:[self.diagnostics componentsJoinedByString:@"\\n"]] forType:NSPasteboardTypeString]; }
 - (void)applicationWillTerminate:(NSNotification *)note { [self.replyTimer invalidate]; [self.sessionTimer invalidate]; [self.refreshTimer invalidate]; [self.permissionTimer invalidate]; if (_device) { [self sendSession:NO]; IOHIDDeviceClose(_device, kIOHIDOptionsTypeNone); CFRelease(_device); } if (self.manager) { IOHIDManagerClose(self.manager, kIOHIDOptionsTypeNone); IOHIDManagerUnscheduleFromRunLoop(self.manager, CFRunLoopGetMain(), kCFRunLoopCommonModes); CFRelease(self.manager); } }
 @end
 
