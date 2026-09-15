@@ -14,5 +14,6 @@ clang -fobjc-arc \
 cp "$root_dir/Info.plist" "$out_dir/Info.plist"
 cp "$root_dir/Resources/PkgInfo" "$out_dir/PkgInfo"
 cp "$root_dir/Resources/AppIcon.icns" "$out_dir/Resources/AppIcon.icns"
+cp "$root_dir/Resources/使用说明.txt" "$out_dir/Resources/使用说明.txt"
 codesign --force --deep --sign - "$root_dir/build/鼠标电量.app"
 echo "Built: $root_dir/build/鼠标电量.app"

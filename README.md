@@ -41,6 +41,16 @@ open build/鼠标电量.app
 
 首次启动需要在“系统设置 → 隐私与安全性 → 输入监控”中允许此应用。macOS 将该接收器的厂商状态报告归入此权限；本应用只接受经过校验的电量回复报文。
 
+### 第一次打开 / Gatekeeper
+
+从 GitHub 下载的版本尚未经过 Apple 公证，首次打开时 macOS 可能显示“未打开‘鼠标电量’”。这不表示应用被判定为恶意软件，而是 macOS 无法验证开发者身份。请按以下方式打开：
+
+1. 将“鼠标电量.app”拖入“应用程序”。
+2. 在 Finder 中按住 **Control** 点击“鼠标电量”，选择“打开”，并再次确认“打开”。
+3. 如果仍只显示“移到废纸篓”，进入“系统设置 → 隐私与安全性”，滚到页面下方，找到此应用被拦截的提示，点击“仍要打开”。
+
+之后可正常从“应用程序”启动。
+
 ### 非官方与商标说明
 
 本项目不是官方驱动，不包含、分发或依赖任何厂商安装包、可执行文件、DLL、图片、Logo 或配置文件。它不会修改鼠标设置、固件、灯效、按键或 DPI。使用前请自行判断风险；作者不对设备兼容性或数据准确性作保证。
@@ -81,6 +91,16 @@ open build/鼠标电量.app
 ```
 
 At first launch, allow Input Monitoring in **System Settings → Privacy & Security → Input Monitoring**. macOS puts this receiver’s vendor status channel behind that permission. The app accepts only checksum-validated battery replies.
+
+### First launch / Gatekeeper
+
+The GitHub build has not been notarized by Apple, so macOS may initially say it cannot open MouseBattery. This does not mean macOS has identified it as malware; it cannot verify the developer’s identity. To open it:
+
+1. Drag `鼠标电量.app` to Applications.
+2. In Finder, Control-click the app, choose **Open**, then confirm **Open** again.
+3. If only **Move to Trash** is available, go to **System Settings → Privacy & Security**, scroll to the bottom, find the blocked-app notice, and choose **Open Anyway**.
+
+Afterward, the app can be opened normally from Applications.
 
 ### Unofficial and trademark notice
 
