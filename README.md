@@ -1,4 +1,4 @@
-# MouseBattery for macOS / 鼠标电量
+# TAIDU MC203 MouseBattery for macOS（仅支持钛度 MC203）
 
 [English](#english) · [简体中文](#简体中文)
 
